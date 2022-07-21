@@ -22,15 +22,23 @@ def receive_event(s: socket) -> tuple[int, tuple[int, int, int]]:
 
 
 def handle_client(s: socket):
-    devices = {}
+    d = {}
     for fd, device in receive_devices(s):
-        devices[fd] = device
+        d[fd] = device
 
     while True:
         fd, event = receive_event(s)
         if fd == 4294967295:
-            break
+            s.close()
+            for fd in d:
+                d[fd].close()
+            print("Exiting")
+            exit()
+        elif fd == 4278124286:
+            print("Control was given")
+        elif fd == 4261281277:
+            print("Control was taken")
         elif event[0] == 0:
-            devices[fd].syn()
+            d[fd].syn()
         else:
-            devices[fd].write(*event)
+            d[fd].write(*event)

@@ -20,6 +20,7 @@ def get_streams(cfg: NetConfig) -> Generator[socket, None, None]:
                         yield conn
             else:
                 s.connect((cfg.ip_address, cfg.port))
+                print(f"Connection established to {cfg.ip_address}")
                 yield s
 
 
