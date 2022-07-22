@@ -26,10 +26,12 @@ def handle_client(s: socket):
     for fd, device in receive_devices(s):
         d[fd] = device
 
+    active_keys = {}
     while True:
         fd, event = receive_event(s)
-        if event[1] in [29, 97, 157]:
-            print(event)
+        if event[0] == 1:
+            active_keys[event[1]] = event[2]
+            print(i for i in active_keys if active_keys[i])
         if fd == 4294967295:
             s.close()
             for fd in d:
