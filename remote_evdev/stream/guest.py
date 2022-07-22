@@ -28,6 +28,8 @@ def handle_client(s: socket):
 
     while True:
         fd, event = receive_event(s)
+        if event[1] in [29, 97, 157]:
+            print(event)
         if fd == 4294967295:
             s.close()
             for fd in d:
