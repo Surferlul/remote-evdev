@@ -48,6 +48,7 @@ def give_control(s: socket, d: dict[int: InputDevice]):
         continue
     for fd in d:
         d[fd].grab()
+    print("Ready")
 
 
 def take_control(s: socket, d: dict[int: InputDevice]):
