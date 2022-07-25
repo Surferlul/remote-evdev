@@ -1,12 +1,20 @@
 from dataclasses import dataclass
 import sys
 from os import path
+from enum import Enum
+
+
+class DeviceType(Enum):
+    KEYBOARD = 0
+    POINTER = 1
+    TOUCH = 2
+    OTHER = 3
 
 
 @dataclass
 class DeviceInfo:
     path: str
-    device_type: str
+    device_type: DeviceType
 
 
 @dataclass
@@ -57,8 +65,8 @@ def get_config() -> tuple[NetConfig, list[DeviceInfo]]:
                     case "--event": value = "/dev/input/"
                     case "--full-path": pass
                     case "--type":
-                        match args[n+1]:
-                            case "pointer" | "keyboard": key = "type"
+                        match args[n+1].upper():
+                            case "POINTER" | "KEYBOARD" | "TOUCH" | "OTHER": key = "type"
                             case _: raise ValueError(f"Invalid device type {args[n+1]}")
                 n += 1
                 match key:
@@ -66,7 +74,8 @@ def get_config() -> tuple[NetConfig, list[DeviceInfo]]:
                         value = f"{value}{args[n]}"
                         if path.exists(value):
                             devices_info[-1].path = value
-                    case "type": devices_info[-1].device_type = args[n]
+                    case "type":
+                        devices_info[-1].device_type = getattr(DeviceType, args[n].upper())
         n += 1
 
     if cfg.ip_address == "auto":
